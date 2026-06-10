@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> adj(numCourses);
+        vector<int> inDegree(numCourses, 0);
+
+        for (const auto& pre : prerequisites) {
+            int course = pre[0];
+            int prereq = pre[1];
+            
+            adj[prereq].push_back(course); // prereq -> course
+            inDegree[course]++;
+        }
+
+        queue<int> q;
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        int coursesCompleted = 0;
+
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+            coursesCompleted++;
+            
+            
+            for (int nextCourse : adj[curr]) {
+                inDegree[nextCourse]--;
+                
+                
+                if (inDegree[nextCourse] == 0) {
+                    q.push(nextCourse);
+                }
+            }
+        }
+
+        return coursesCompleted == numCourses;
+    }
+};
